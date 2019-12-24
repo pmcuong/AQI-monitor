@@ -1,11 +1,15 @@
 package com.example.aqimonitor.view.activity
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.example.aqimonitor.R
 import com.example.aqimonitor.base.BaseActivity
+import com.example.aqimonitor.base.OnItemClickedListener
 import com.example.aqimonitor.databinding.ActivityMainBinding
+import com.example.aqimonitor.extention.showToast
+import com.example.aqimonitor.extention.toDateShow
 import com.example.aqimonitor.view.adapter.MainAdapter
 import com.example.aqimonitor.view.viewmodel.MainViewModel
 
@@ -32,6 +36,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         })
 
 //        adapter.onItemClick = object : OnItemClickedListener {
+//            override fun onLongClick(position: Int) {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//            }
+//
 //            override fun onClick(position: Int) {
 //                Toast.makeText(applicationContext, adapter.data[position].content, Toast.LENGTH_SHORT).show()
 ////                viewModel?.setListData()
@@ -39,20 +47,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 //        }
 
         adapter.onItemClick = { position, content ->
+            Log.d("MainActivity", ": " + position);
             showToast(this, "")
 
-            Toast.makeText(this, adapter.data[position].content, Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, adapter.data[position].nameAddress, Toast.LENGTH_SHORT).show()
             "20/11/2019".toDateShow()
-//            R.string.app_name.getString()
         }
     }
 }
 
-fun showToast(context: Context, content: String) {
-    Toast.makeText(context, content, Toast.LENGTH_SHORT).show()
-}
-
-fun String.toDateShow(): String {
-    return  "text"
-}

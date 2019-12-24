@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">AQI Monitor</string>
+    <string name="str_hazadous">Hazadous</string>
+    <string name="str_very_unhealthy">Very Unhealthy</string>
+    <string name="str_unhealthy">Unhealthy</string>
+    <string name="str_unhealthy_for_sensitive_group">Unhealthy for sensitive group</string>
+    <string name="str_moderate">Moderate</string>
+    <string name="str_good">Good</string>
 </resources>

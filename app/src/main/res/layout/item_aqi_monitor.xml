@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="aqiModel"
+            type="com.example.aqimonitor.model.AQIModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".view.activity.MainActivity"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_aqi_level"
+            android:layout_width="120dp"
+            android:layout_height="150dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_name_address"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            app:layout_constraintStart_toEndOf="@id/iv_aqi_level"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center_vertical"
+            android:textSize="32dp"
+            android:textColor="@android:color/black"
+            android:text="@{aqiModel.nameAddress}"/>
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            app:layout_constraintStart_toStartOf="@id/tv_name_address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_name_address"
+            android:textSize="22dp"
+            android:textColor="@android:color/black"
+            android:text="@{aqiModel.address}"
+            android:gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/tv_aqi_index"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/tv_name_address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_address"
+            app:layout_constraintBottom_toBottomOf="@id/iv_aqi_level"
+            android:text="@{Integer.toString(aqiModel.aqiIndex)}"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/tv_name_aqi_level"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_aqi_index"
+            app:layout_constraintStart_toStartOf="@id/tv_aqi_index"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/iv_weather"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintTop_toBottomOf="@id/iv_aqi_level"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/iv_aqi_level"
+            app:layout_constraintStart_toEndOf="@id/iv_weather"
+            app:layout_constraintEnd_toStartOf="@id/tv_name_aqi_level"
+            android:layout_marginTop="20dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -7,6 +7,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aqimonitor.base.BaseAdapter.BaseViewHolder
+import com.example.aqimonitor.view.viewmodel.MainViewModel
+import android.graphics.drawable.GradientDrawable
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.os.Build
+import android.view.View
+
 
 abstract class BaseAdapter<T, VB : ViewDataBinding>(
     var context: Context,
@@ -29,6 +35,7 @@ abstract class BaseAdapter<T, VB : ViewDataBinding>(
         fun setVariable(id: Int, t: T) {
             binding.setVariable(id, t)
             binding.executePendingBindings()
+            MainViewModel.STATIC_VALUE
         }
     }
 
@@ -46,9 +53,10 @@ abstract class BaseAdapter<T, VB : ViewDataBinding>(
         holder.apply {
             setVariable(getId(), data[position])
             itemView.setOnClickListener {
-//                onItemClick!!(position, "FUCK")
+                onItemClick!!(position, "FUCK")
                 notifyItemChanged(position)
             }
+
         }
     }
 
