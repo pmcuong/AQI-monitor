@@ -1,8 +1,8 @@
-package com.example.kotlinexample.view.viewmodel
+package com.example.aqimonitor.view.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.kotlinexample.model.MainItem
+import com.example.aqimonitor.model.MainItem
 
 class MainViewModel: ViewModel() {
 

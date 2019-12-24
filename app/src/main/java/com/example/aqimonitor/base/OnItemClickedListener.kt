@@ -1,4 +1,4 @@
-package com.example.kotlinexample.base
+package com.example.aqimonitor.base
 
 interface OnItemClickedListener {
     fun onClick(position: Int)

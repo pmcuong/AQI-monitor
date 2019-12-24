@@ -6,7 +6,7 @@
     <data>
         <variable
             name="mainItem"
-            type="com.example.kotlinexample.model.MainItem" />
+            type="com.example.aqimonitor.model.MainItem" />
 
     </data>
 

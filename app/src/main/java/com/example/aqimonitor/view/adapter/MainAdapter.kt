@@ -1,11 +1,11 @@
-package com.example.kotlinexample.view.adapter
+package com.example.aqimonitor.view.adapter
 
 import android.content.Context
-import com.example.kotlinexample.BR
-import com.example.kotlinexample.R
-import com.example.kotlinexample.base.BaseAdapter
-import com.example.kotlinexample.databinding.ItemMainBinding
-import com.example.kotlinexample.model.MainItem
+import com.example.aqimonitor.BR
+import com.example.aqimonitor.R
+import com.example.aqimonitor.base.BaseAdapter
+import com.example.aqimonitor.databinding.ItemMainBinding
+import com.example.aqimonitor.model.MainItem
 
 class MainAdapter(context: Context, data: List<MainItem>? = ArrayList()) :
     BaseAdapter<MainItem, ItemMainBinding>(context, data!!) {

@@ -1,15 +1,13 @@
-package com.example.kotlinexample.view.activity
+package com.example.aqimonitor.view.activity
 
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import com.example.kotlinexample.R
-import com.example.kotlinexample.base.BaseActivity
-import com.example.kotlinexample.base.OnItemClickedListener
-import com.example.kotlinexample.databinding.ActivityMainBinding
-import com.example.kotlinexample.view.adapter.MainAdapter
-import com.example.kotlinexample.view.viewmodel.MainViewModel
-import com.example.kotlinexample.view.viewmodel.getData
+import com.example.aqimonitor.R
+import com.example.aqimonitor.base.BaseActivity
+import com.example.aqimonitor.databinding.ActivityMainBinding
+import com.example.aqimonitor.view.adapter.MainAdapter
+import com.example.aqimonitor.view.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 

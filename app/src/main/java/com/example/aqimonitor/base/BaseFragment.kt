@@ -1,4 +1,4 @@
-package com.example.kotlinexample.base
+package com.example.aqimonitor.base
 
 import android.content.Context
 import android.os.Bundle

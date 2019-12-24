@@ -1,4 +1,4 @@
-package com.example.kotlinexample
+package com.example.aqimonitor
 
 import org.junit.Test
 

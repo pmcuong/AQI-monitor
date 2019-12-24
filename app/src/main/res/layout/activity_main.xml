@@ -6,7 +6,7 @@ xmlns:bind="http://schemas.android.com/tools">
 <data>
     <variable
         name="main"
-        type="com.example.kotlinexample.view.activity.MainActivity" />
+        type="com.example.aqimonitor.view.activity.MainActivity" />
 
 </data>
 

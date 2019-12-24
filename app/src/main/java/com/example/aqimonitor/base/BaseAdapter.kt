@@ -1,4 +1,4 @@
-package com.example.kotlinexample.base
+package com.example.aqimonitor.base
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kotlinexample.base.BaseAdapter.BaseViewHolder
+import com.example.aqimonitor.base.BaseAdapter.BaseViewHolder
 
 abstract class BaseAdapter<T, VB : ViewDataBinding>(
     var context: Context,
