@@ -9,9 +9,7 @@ import com.example.aqimonitor.BR
 import com.example.aqimonitor.R
 import com.example.aqimonitor.base.BaseAdapter
 import com.example.aqimonitor.databinding.ItemAqiMonitorBinding
-import com.example.aqimonitor.extention.getColorFromAqiIndex
-import com.example.aqimonitor.extention.getNameOfAqiLevel
-import com.example.aqimonitor.extention.setGradientColor
+import com.example.aqimonitor.extention.*
 import com.example.aqimonitor.model.AQIModel
 
 class MainAdapter(context: Context, data: List<AQIModel>? = ArrayList()) :
@@ -41,5 +39,7 @@ class MainAdapter(context: Context, data: List<AQIModel>? = ArrayList()) :
         super.onBindViewHolder(holder, position)
         binding?.tvAqiIndex?.setGradientColor(getColorFromAqiIndex(context, data.get(position).aqiIndex!!))
         binding?.tvNameAqiLevel?.setText(getNameOfAqiLevel(context, data.get(position).aqiIndex!!))
+        binding?.root?.setBorderBackground(context, getColorFromAqiIndex(context, data.get(position).aqiIndex!!))
+        binding?.ivAqiLevel?.setFaceFromAqiIndex(data.get(position).aqiIndex!!)
     }
 }

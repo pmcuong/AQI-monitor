@@ -13,7 +13,7 @@ class MainViewModel: ViewModel() {
 
     fun setListData() {
 
-        list.add(AQIModel("Ha Noi", "Ha Noi, Viet Nam", 40))
+        list.add(AQIModel("Ha Noi", "Ha Noi, Viet Nam", 340))
         list.add(AQIModel("Ha Noi", "Ha Noi, Viet Nam", 340))
         list.add(AQIModel("Ha Noi", "Ha Noi, Viet Nam", 240))
         list.add(AQIModel("Ha Noi", "Ha Noi, Viet Nam", 112))

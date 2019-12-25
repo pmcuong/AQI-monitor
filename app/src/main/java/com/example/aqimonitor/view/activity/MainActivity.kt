@@ -1,15 +1,10 @@
 package com.example.aqimonitor.view.activity
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.example.aqimonitor.R
 import com.example.aqimonitor.base.BaseActivity
-import com.example.aqimonitor.base.OnItemClickedListener
 import com.example.aqimonitor.databinding.ActivityMainBinding
-import com.example.aqimonitor.extention.showToast
-import com.example.aqimonitor.extention.toDateShow
 import com.example.aqimonitor.view.adapter.MainAdapter
 import com.example.aqimonitor.view.viewmodel.MainViewModel
 
@@ -48,10 +43,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
         adapter.onItemClick = { position, content ->
             Log.d("MainActivity", ": " + position);
-            showToast(this, "")
-
-            Toast.makeText(this, adapter.data[position].nameAddress, Toast.LENGTH_SHORT).show()
-            "20/11/2019".toDateShow()
         }
     }
 }

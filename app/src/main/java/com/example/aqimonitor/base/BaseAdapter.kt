@@ -35,7 +35,6 @@ abstract class BaseAdapter<T, VB : ViewDataBinding>(
         fun setVariable(id: Int, t: T) {
             binding.setVariable(id, t)
             binding.executePendingBindings()
-            MainViewModel.STATIC_VALUE
         }
     }
 
@@ -54,7 +53,7 @@ abstract class BaseAdapter<T, VB : ViewDataBinding>(
             setVariable(getId(), data[position])
             itemView.setOnClickListener {
                 onItemClick!!(position, "FUCK")
-                notifyItemChanged(position)
+//                notifyItemChanged(position)
             }
 
         }
