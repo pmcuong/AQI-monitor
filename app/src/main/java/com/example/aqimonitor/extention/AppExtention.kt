@@ -56,39 +56,27 @@ fun View.setGradientColor(endColor: Int) {
         GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(endColor, Color.WHITE))
     gradient.shape = GradientDrawable.RECTANGLE
     gradient.cornerRadius = 10f
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-        setBackground(gradient)
-    } else {
-        setBackgroundDrawable(gradient)
-    }
     background = gradient
 }
 
 fun View.setBorderBackground(mContext: Context, color: Int) {
-    var shapeDrawable: GradientDrawable? = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    val shapeDrawable: GradientDrawable? = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         mContext.resources.getDrawable(R.drawable.background_aqi_item, null)
-
     } else {
-        TODO("VERSION.SDK_INT < LOLLIPOP")
         mContext.resources.getDrawable(R.drawable.background_aqi_item)
-    }) as GradientDrawable?;
+    }) as GradientDrawable?
     shapeDrawable?.setStroke(15, color)
-//
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-        setBackground(shapeDrawable)
-    } else {
-        setBackgroundDrawable(shapeDrawable)
-    }
+    background = shapeDrawable
 }
 
 fun ImageView.setFaceFromAqiIndex(aqiIndex: Int) {
-    val imgResId = when {
-        aqiIndex >= 0 && aqiIndex <= 50 -> R.drawable.ic_good_face
-        aqiIndex >= 51 && aqiIndex <= 100 -> R.drawable.ic_moderate_face
-        aqiIndex >= 101 && aqiIndex <= 150 -> R.drawable.ic_unhealthy_sensitive_group_face
-        aqiIndex >= 151 && aqiIndex <= 200 -> R.drawable.ic_unhealthy_face
-        aqiIndex >= 201 && aqiIndex <= 300 -> R.drawable.ic_very_unhealthy_face
-        aqiIndex >= 301 && aqiIndex <= 500 -> R.drawable.ic_hazadous_face
+    val imgResId = when (aqiIndex) {
+        in 0..50 -> R.drawable.ic_good_face
+        in 51..100 -> R.drawable.ic_moderate_face
+        in 101..150 -> R.drawable.ic_unhealthy_sensitive_group_face
+        in 151..200 -> R.drawable.ic_unhealthy_face
+        in 201..300 -> R.drawable.ic_very_unhealthy_face
+        in 301..500 -> R.drawable.ic_hazadous_face
         else -> R.drawable.ic_good_face
     }
     setImageResource(imgResId)
