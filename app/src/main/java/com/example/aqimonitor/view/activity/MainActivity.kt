@@ -1,6 +1,5 @@
 package com.example.aqimonitor.view.activity
 
-import android.util.Log
 import androidx.lifecycle.Observer
 import com.example.aqimonitor.R
 import com.example.aqimonitor.base.BaseActivity
@@ -42,7 +41,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 //        }
 
         adapter.onItemClick = { position, content ->
-            Log.d("MainActivity", ": " + position);
+            viewModel?.searchCity("hanoi")
         }
     }
 }

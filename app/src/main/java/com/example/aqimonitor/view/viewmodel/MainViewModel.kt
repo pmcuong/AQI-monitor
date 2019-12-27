@@ -1,9 +1,13 @@
 package com.example.aqimonitor.view.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.aqimonitor.model.AQIModel
 import com.example.aqimonitor.model.MainItem
+import com.example.aqimonitor.model.search.SearchGlobalObject
+import com.example.aqimonitor.network.ApiManager
+import com.example.aqimonitor.network.ResultCallback
 
 class MainViewModel: ViewModel() {
 
@@ -23,9 +27,16 @@ class MainViewModel: ViewModel() {
         listData.value = list
     }
 
-    companion object {
-        var STATIC_VALUE = 10
-    }
-}
+    fun searchCity(city: String) {
+        ApiManager.instance.fetchCityByName(city, object : ResultCallback {
+            override fun onError(errCode: String) {
 
-fun getData() = "10"
+            }
+            override fun onSuccess(response: Any) {
+                response as SearchGlobalObject
+                Log.e("response", response.data?.get(0)?.station?.name.toString())
+            }
+        })
+    }
+
+}

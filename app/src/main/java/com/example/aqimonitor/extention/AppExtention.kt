@@ -2,57 +2,51 @@ package com.example.aqimonitor.extention
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.LayerDrawable
-import android.graphics.drawable.ShapeDrawable
 import android.os.Build
 import android.view.View
-import android.widget.Toast
-import com.example.aqimonitor.R
-import android.graphics.drawable.shapes.RoundRectShape
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getColor
+import com.example.aqimonitor.R
 
 
-fun showToast(context: Context, content: String) {
-    Toast.makeText(context, content, Toast.LENGTH_SHORT).show()
+fun Context.showToast(content: String) {
+    Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
 }
 
 fun String.toDateShow(): String {
     return "text"
 }
 
-fun getColorFromAqiIndex(mContext: Context, aqiIndex: Int): Int {
-    return when {
-        aqiIndex >= 0 && aqiIndex <= 50 -> getColor(mContext, R.color.colorGood)
-        aqiIndex >= 51 && aqiIndex <= 100 -> getColor(mContext, R.color.colorModerate)
-        aqiIndex >= 101 && aqiIndex <= 150 -> getColor(
-            mContext,
-            R.color.colorUnhealthyForSensitiveGroup
-        )
-        aqiIndex >= 151 && aqiIndex <= 200 -> getColor(mContext, R.color.colorUnhealthy)
-        aqiIndex >= 201 && aqiIndex <= 300 -> getColor(mContext, R.color.colorVeryUnhealthy)
-        aqiIndex >= 301 && aqiIndex <= 500 -> getColor(mContext, R.color.colorHazadous)
-        else -> getColor(mContext, R.color.colorGood)
+fun Context.getColorFromAqiIndex(aqiIndex: Int): Int {
+    return when (aqiIndex) {
+        in 0..50 -> getColor(this, R.color.colorGood)
+        in 51..100 -> getColor(this, R.color.colorModerate)
+        in 101..150 -> getColor(this, R.color.colorUnhealthyForSensitiveGroup)
+        in 151..200 -> getColor(this, R.color.colorUnhealthy)
+        in 201..300 -> getColor(this, R.color.colorVeryUnhealthy)
+        in 301..500 -> getColor(this, R.color.colorHazadous)
+        else -> getColor(this, R.color.colorGood)
     }
 }
 
-fun getColor(mContext: Context, resColorId: Int): Int {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        return mContext.resources.getColor(resColorId, null)
+fun Context.getColor(resColorId: Int): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        this.resources.getColor(resColorId, null)
     } else {
-        return mContext.resources.getColor(resColorId)
+        this.resources.getColor(resColorId)
     }
 }
 
-fun getNameOfAqiLevel(mContext: Context, aqiIndex: Int): String {
-    return when {
-        aqiIndex >= 0 && aqiIndex <= 50 -> mContext.getString(R.string.str_moderate)
-        aqiIndex >= 51 && aqiIndex <= 100 -> mContext.getString(R.string.str_moderate)
-        aqiIndex >= 101 && aqiIndex <= 150 -> mContext.getString(R.string.str_unhealthy_for_sensitive_group)
-        aqiIndex >= 151 && aqiIndex <= 200 -> mContext.getString(R.string.str_unhealthy)
-        aqiIndex >= 201 && aqiIndex <= 300 -> mContext.getString(R.string.str_very_unhealthy)
-        aqiIndex >= 301 && aqiIndex <= 500 -> mContext.getString(R.string.str_hazadous)
+fun Context.getNameOfAqiLevel(aqiIndex: Int): String {
+    return when (aqiIndex) {
+        in 0..50 -> getString(R.string.str_moderate)
+        in 51..100 -> getString(R.string.str_moderate)
+        in 101..150 -> getString(R.string.str_unhealthy_for_sensitive_group)
+        in 151..200 -> getString(R.string.str_unhealthy)
+        in 201..300 -> getString(R.string.str_very_unhealthy)
+        in 301..500 -> getString(R.string.str_hazadous)
         else -> ""
     }
 }
@@ -67,6 +61,7 @@ fun View.setGradientColor(endColor: Int) {
     } else {
         setBackgroundDrawable(gradient)
     }
+    background = gradient
 }
 
 fun View.setBorderBackground(mContext: Context, color: Int) {

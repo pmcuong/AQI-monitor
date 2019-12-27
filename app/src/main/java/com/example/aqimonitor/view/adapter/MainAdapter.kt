@@ -41,5 +41,7 @@ class MainAdapter(context: Context, data: List<AQIModel>? = ArrayList()) :
         binding?.tvNameAqiLevel?.setText(getNameOfAqiLevel(context, data.get(position).aqiIndex!!))
         binding?.root?.setBorderBackground(context, getColorFromAqiIndex(context, data.get(position).aqiIndex!!))
         binding?.ivAqiLevel?.setFaceFromAqiIndex(data.get(position).aqiIndex!!)
+        binding?.tvAqiIndex?.setGradientColor(context.getColorFromAqiIndex(data.get(position).aqiIndex!!))
+        binding?.tvNameAqiLevel?.setText(context.getNameOfAqiLevel(data.get(position).aqiIndex!!))
     }
 }
