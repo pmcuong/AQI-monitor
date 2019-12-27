@@ -1,13 +1,27 @@
 package com.example.aqimonitor.view.activity
 
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import com.example.aqimonitor.R
 import com.example.aqimonitor.base.BaseActivity
 import com.example.aqimonitor.databinding.ActivityMainBinding
+import com.example.aqimonitor.extention.setStatusBarGradient
+import com.example.aqimonitor.model.AQIModel
 import com.example.aqimonitor.view.adapter.MainAdapter
 import com.example.aqimonitor.view.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
+    override fun onClick(v: View) {
+       when (v?.id) {
+           R.id.tv_add -> {Toast.makeText(this, "Add item", Toast.LENGTH_SHORT).show()}
+           R.id.tv_map -> {Toast.makeText(this, "Go to map", Toast.LENGTH_SHORT).show()}
+       }
+    }
 
     var adapter: MainAdapter = MainAdapter(this)
 
@@ -21,6 +35,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun initView() {
         binding?.main = this
+        setStatusBarGradient()
         binding?.recyclerView?.adapter = adapter
 
 
@@ -41,8 +56,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 //        }
 
         adapter.onItemClick = { position, content ->
+            Log.d("MainActivity", ": $content");
+            openDetaiActivity(content)
             viewModel?.searchCity("hanoi")
         }
+    }
+
+    fun openDetaiActivity(aqiData: AQIModel) {
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra("aqi_data", aqiData)
+        startActivity(intent)
     }
 }
 

@@ -7,11 +7,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aqimonitor.base.BaseAdapter.BaseViewHolder
-import com.example.aqimonitor.view.viewmodel.MainViewModel
-import android.graphics.drawable.GradientDrawable
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.os.Build
-import android.view.View
 
 
 abstract class BaseAdapter<T, VB : ViewDataBinding>(
@@ -20,7 +15,7 @@ abstract class BaseAdapter<T, VB : ViewDataBinding>(
 ) : RecyclerView.Adapter<BaseViewHolder<T, VB>>() {
 
     var binding: VB? = null
-    var onItemClick: ((Int, String) -> Unit)? = null
+    var onItemClick: ((Int, T) -> Unit)? = null
     abstract fun getId(): Int
 
     open fun setListData(data: List<T>?) {
@@ -52,8 +47,7 @@ abstract class BaseAdapter<T, VB : ViewDataBinding>(
         holder.apply {
             setVariable(getId(), data[position])
             itemView.setOnClickListener {
-                onItemClick!!(position, "FUCK")
-//                notifyItemChanged(position)
+                onItemClick!!(position, data[position])
             }
 
         }

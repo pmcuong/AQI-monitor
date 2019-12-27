@@ -1,14 +1,22 @@
 package com.example.aqimonitor.extention
 
+import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import android.text.format.DateFormat
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getColor
 import com.example.aqimonitor.R
+import java.util.*
+
+
 
 
 fun Context.showToast(content: String) {
@@ -80,4 +88,19 @@ fun ImageView.setFaceFromAqiIndex(aqiIndex: Int) {
         else -> R.drawable.ic_good_face
     }
     setImageResource(imgResId)
+}
+
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+fun Activity.setStatusBarGradient() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        val background = resources.getDrawable(R.drawable.background_toolbar, null)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = resources.getColor(android.R.color.transparent)
+        window.navigationBarColor = resources.getColor(android.R.color.transparent)
+        window.setBackgroundDrawable(background)
+    }
+}
+
+fun TextView.setCurrentTime() {
+    text = DateFormat.format("EEEE, MMMM dd, yyyy", Date(System.currentTimeMillis()))
 }

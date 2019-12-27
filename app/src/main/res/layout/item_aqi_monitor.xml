@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:background="@drawable/background_aqi_item"
-        android:layout_margin="10dp"
+        android:layout_marginBottom="10dp"
         >
         <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
@@ -59,18 +59,44 @@
                 app:layout_constraintStart_toStartOf="@id/tv_name_address"
                 app:layout_constraintTop_toBottomOf="@id/tv_name_address" />
 
-            <TextView
-                android:id="@+id/tv_aqi_index"
+            <View
+                android:id="@+id/background_aqi_index"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/tv_address"
+                app:layout_constraintStart_toEndOf="@+id/iv_aqi_level"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/iv_aqi_level"
+                android:alpha="0.7"
+                />
+
+            <TextView
+                android:id="@+id/tv_aqi_index"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="bottom|right"
                 android:text="@{Integer.toString(aqiModel.aqiIndex)}"
                 android:textColor="@android:color/black"
-                android:textSize="30sp"
+                android:textSize="40sp"
+                app:layout_constraintBottom_toBottomOf="@id/iv_aqi_level"
+                app:layout_constraintEnd_toStartOf="@+id/tv_aqi"
+                app:layout_constraintStart_toStartOf="@id/tv_name_address"
+                app:layout_constraintTop_toBottomOf="@id/tv_address"
+                app:layout_constraintHorizontal_chainStyle="packed"/>
+
+            <TextView
+                android:id="@+id/tv_aqi"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="@id/iv_aqi_level"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/tv_name_address"
-                app:layout_constraintTop_toBottomOf="@id/tv_address" />
+                app:layout_constraintStart_toEndOf="@id/tv_aqi_index"
+                app:layout_constraintTop_toBottomOf="@id/tv_address"
+                android:text="AQI"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:gravity="bottom"
+                android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/tv_name_aqi_level"
@@ -78,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/tv_aqi_index"
+                app:layout_constraintStart_toEndOf="@id/iv_aqi_level"
                 app:layout_constraintTop_toBottomOf="@id/tv_aqi_index" />
 
             <ImageView

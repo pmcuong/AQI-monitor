@@ -1,6 +1,7 @@
 package com.example.aqimonitor.base
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -23,4 +24,6 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel> : AppCompatAct
 
         initView()
     }
+
+    public abstract fun onClick(v: View)
 }
