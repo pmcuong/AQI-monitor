@@ -6,4 +6,8 @@
     <string name="str_unhealthy_for_sensitive_group">Unhealthy for sensitive group</string>
     <string name="str_moderate">Moderate</string>
     <string name="str_good">Good</string>
+    <string name="location">Location permission is required to run AQI Monitor</string>
+    <string name="str_search">Search</string>
+    <string name="str_follow">Follow</string>
+    <string name="str_unfollow">Unfollow</string>
 </resources>

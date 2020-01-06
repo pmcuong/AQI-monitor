@@ -1,5 +1,6 @@
 package com.example.aqimonitor.network
 
+import com.example.aqimonitor.model.air_quality.SearchResult
 import com.example.aqimonitor.model.search.SearchGlobalObject
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -42,4 +43,20 @@ class ApiManager {
         disposable.dispose()
     }
 
+    fun fetchNearestCurrenLocation(latLng: String, callback: ResultCallback) {
+        disposable.add(
+            apiService
+                .fetchNearestStation(latLng)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<SearchResult>() {
+                    override fun onSuccess(result: SearchResult) {
+                        callback.onSuccess(result)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        callback.onError(e.message!!)
+                    }
+                }))
+    }
 }

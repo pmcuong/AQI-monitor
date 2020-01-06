@@ -4,7 +4,7 @@
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="aqiModel"
             type="com.example.aqimonitor.model.AQIModel" />
@@ -26,14 +26,43 @@
             android:translationZ="20dp"
             tools:context=".view.activity.MainActivity">
 
+            <RelativeLayout
+                android:id="@+id/container_follow_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <TextView
+                    android:id="@+id/tv_follow"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:text="@string/str_follow"
+                    android:gravity="center"
+                    android:textColor="@android:color/holo_blue_light"
+                    android:background="@drawable/border_follow_button"
+                    android:visibility="@{aqiModel.isFollow ? View.INVISIBLE : View.VISIBLE}"/>
+
+                <TextView
+                    android:id="@+id/tv_unfollow"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:text="@string/str_unfollow"
+                    android:gravity="center"
+                    android:textColor="@android:color/holo_blue_light"
+                    android:background="@drawable/border_follow_button"
+                    android:visibility="@{aqiModel.isFollow ? View.VISIBLE : View.INVISIBLE}"/>
+            </RelativeLayout>
+
             <ImageView
                 android:id="@+id/iv_aqi_level"
                 android:layout_width="130dp"
                 android:layout_height="150dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/container_follow_button"
                 android:padding="30dp"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:layout_marginTop="10dp"
+                />
 
             <TextView
                 android:id="@+id/tv_name_address"
@@ -45,7 +74,7 @@
                 android:textSize="32dp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_aqi_level"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/iv_aqi_level" />
 
             <TextView
                 android:id="@+id/tv_address"
@@ -75,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:gravity="bottom|right"
-                android:text="@{Integer.toString(aqiModel.aqiIndex)}"
+                android:text="@{Float.toString(aqiModel.aqiIndex)}"
                 android:textColor="@android:color/black"
                 android:textSize="40sp"
                 app:layout_constraintBottom_toBottomOf="@id/iv_aqi_level"

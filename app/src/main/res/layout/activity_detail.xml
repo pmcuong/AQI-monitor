@@ -86,7 +86,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:gravity="bottom|right"
-                            android:text="@{Integer.toString(aqiModel.aqiIndex)}"
+                            android:text="@{Float.toString(aqiModel.aqiIndex)}"
                             android:textColor="@android:color/black"
                             android:textSize="40sp"
                             app:layout_constraintBottom_toBottomOf="@id/iv_aqi_level"

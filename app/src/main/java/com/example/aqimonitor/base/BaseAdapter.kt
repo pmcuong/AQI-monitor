@@ -15,10 +15,18 @@ abstract class BaseAdapter<T, VB : ViewDataBinding>(
 ) : RecyclerView.Adapter<BaseViewHolder<T, VB>>() {
 
     var binding: VB? = null
+    var any:Any?=null
     var onItemClick: ((Int, T) -> Unit)? = null
     abstract fun getId(): Int
 
     open fun setListData(data: List<T>?) {
+        any = data
+        when(any){
+            is String->{
+
+            }
+            is List<*>-> {}
+        }
         this.data = data!!
         notifyDataSetChanged()
     }
@@ -47,7 +55,9 @@ abstract class BaseAdapter<T, VB : ViewDataBinding>(
         holder.apply {
             setVariable(getId(), data[position])
             itemView.setOnClickListener {
-                onItemClick!!(position, data[position])
+                onItemClick?.let {
+                    onItemClick!!(position, data[position])
+                }
             }
 
         }

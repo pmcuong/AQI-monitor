@@ -1,14 +1,18 @@
-package com.example.aqimonitor.model.search
+package com.example.aqimonitor.model.air_quality
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.util.ArrayList
 
-data class SearchStationObject(
+data class CityInfo(
     @SerializedName("name")
     @Expose
-    var name: String? = null,
+    val name: String,
+    @SerializedName("url")
+    @Expose
+    val url: String,
     @SerializedName("geo")
     @Expose
-    var geo: ArrayList<Double>? = null
+    var geo: ArrayList<Float>
+
 )

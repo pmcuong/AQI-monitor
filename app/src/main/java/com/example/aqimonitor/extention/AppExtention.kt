@@ -5,6 +5,9 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.location.Address
+import android.location.Geocoder
+import android.location.Location
 import android.os.Build
 import android.text.format.DateFormat
 import android.view.View
@@ -14,6 +17,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getColor
 import com.example.aqimonitor.R
+import com.example.aqimonitor.model.AQIModel
+import java.io.IOException
 import java.util.*
 
 
@@ -27,14 +32,14 @@ fun String.toDateShow(): String {
     return "text"
 }
 
-fun Context.getColorFromAqiIndex(aqiIndex: Int): Int {
+fun Context.getColorFromAqiIndex(aqiIndex: Float): Int {
     return when (aqiIndex) {
-        in 0..50 -> getColor(this, R.color.colorGood)
-        in 51..100 -> getColor(this, R.color.colorModerate)
-        in 101..150 -> getColor(this, R.color.colorUnhealthyForSensitiveGroup)
-        in 151..200 -> getColor(this, R.color.colorUnhealthy)
-        in 201..300 -> getColor(this, R.color.colorVeryUnhealthy)
-        in 301..500 -> getColor(this, R.color.colorHazadous)
+        in 0f..50f -> getColor(this, R.color.colorGood)
+        in 51f..100f -> getColor(this, R.color.colorModerate)
+        in 101f..150f -> getColor(this, R.color.colorUnhealthyForSensitiveGroup)
+        in 151f..200f -> getColor(this, R.color.colorUnhealthy)
+        in 201f..300f -> getColor(this, R.color.colorVeryUnhealthy)
+        in 301f..500f -> getColor(this, R.color.colorHazadous)
         else -> getColor(this, R.color.colorGood)
     }
 }
@@ -47,14 +52,14 @@ fun Context.getColor(resColorId: Int): Int {
     }
 }
 
-fun Context.getNameOfAqiLevel(aqiIndex: Int): String {
+fun Context.getNameOfAqiLevel(aqiIndex: Float): String {
     return when (aqiIndex) {
-        in 0..50 -> getString(R.string.str_moderate)
-        in 51..100 -> getString(R.string.str_moderate)
-        in 101..150 -> getString(R.string.str_unhealthy_for_sensitive_group)
-        in 151..200 -> getString(R.string.str_unhealthy)
-        in 201..300 -> getString(R.string.str_very_unhealthy)
-        in 301..500 -> getString(R.string.str_hazadous)
+        in 0f..50f -> getString(R.string.str_moderate)
+        in 51f..100f -> getString(R.string.str_moderate)
+        in 101f..150f -> getString(R.string.str_unhealthy_for_sensitive_group)
+        in 151f..200f -> getString(R.string.str_unhealthy)
+        in 201f..300f -> getString(R.string.str_very_unhealthy)
+        in 301f..500f -> getString(R.string.str_hazadous)
         else -> ""
     }
 }
@@ -77,7 +82,7 @@ fun View.setBorderBackground(mContext: Context, color: Int) {
     background = shapeDrawable
 }
 
-fun ImageView.setFaceFromAqiIndex(aqiIndex: Int) {
+fun ImageView.setFaceFromAqiIndex(aqiIndex: Float) {
     val imgResId = when (aqiIndex) {
         in 0..50 -> R.drawable.ic_good_face
         in 51..100 -> R.drawable.ic_moderate_face
@@ -103,4 +108,28 @@ fun Activity.setStatusBarGradient() {
 
 fun TextView.setCurrentTime() {
     text = DateFormat.format("EEEE, MMMM dd, yyyy", Date(System.currentTimeMillis()))
+}
+
+fun Location.getLatLngInString(): String {
+    return String.format("%.2f", latitude) + ";" + String.format("%.2f", longitude)
+}
+
+fun AQIModel.getLatLngInString(): String {
+    return String.format("%.2f", latitude) + ";" + String.format("%.2f", longitude)
+}
+
+fun Location.getFullAddressFromLatLnt(context: Context): Address? {
+    val geocoder = Geocoder(context, Locale.getDefault())
+    try {
+        var listAddress: List<Address?>? = null
+        listAddress = geocoder.getFromLocation(latitude, longitude, 1)
+        if (listAddress != null && listAddress.size > 0) {
+            return listAddress[0]
+        } else {
+            return null
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+        return null
+    }
 }
