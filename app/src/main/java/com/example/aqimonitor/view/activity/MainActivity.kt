@@ -38,6 +38,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     var currentLocation: Location? = null
     private var fusedLocationClient: FusedLocationProviderClient? = null
     var listAqiModel: List<AQIModel>? = null
+
     override fun onClick(v: View) {
         when (v?.id) {
             R.id.tv_add -> openSearchActivity()
@@ -64,36 +65,60 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
         viewModel?.listData?.observe(this, Observer { listData ->
             for (item in listData) {
-                Log.d(TAG, "getAllData-id: ${item.id}, ${item.isFollow}, " );
+                Log.d(TAG, "getAllData-id: ${item.id}, ${item.isFollow}, ");
             }
             listAqiModel = listData
             adapter.setListData(listData)
         })
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-//        adapter.onItemClick = object : OnItemClickedListener {
-//            override fun onLongClick(position: Int) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun onClick(position: Int) {
-//                Toast.makeText(applicationContext, adapter.data[position].content, Toast.LENGTH_SHORT).show()
-////                viewModel?.setListData()
-//            }
-//        }
-
         adapter.onItemClick = { position, content ->
-            //            Log.d("MainActivity", ": $content");
             openDetaiActivity(content)
-//            viewModel?.searchCity("halong")
         }
 
-        adapter.onFollowChange = {position, isFollowing ->
+        adapter.onFollowChange = { position, isFollowing ->
             viewModel?.removeItem(listAqiModel!![position])
         }
     }
 
+    private fun getLocation() {
+        fusedLocationClient?.getLastLocation()?.addOnSuccessListener(this) { location ->
+            // Got last known location. In some rare situations this can be null.
+            if (location != null) {
+                currentLocation = location
+                val fullAddress = currentLocation?.getFullAddressFromLatLnt(this)
+                var aqiModel = AQIModel(
+                    1,
+                    currentLocation?.latitude!!,
+                    currentLocation?.longitude!!,
+                    nameAddress = fullAddress?.featureName,
+                    address = fullAddress?.getAddressLine(0),
+                    isCurrentPosition = true
+                )
+                viewModel?.getNearestCurrentLocation(aqiModel)
 
+            }
+
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getLocation()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_ADD && resultCode == Activity.RESULT_OK) {
+            val listAqiModel = data?.getParcelableArrayListExtra<AQIModel>(Constant.LIST_AQI_MODEL)
+            viewModel?.updateList(listAqiModel!!)
+        } else if (requestCode == REQUEST_CODE_MAP && resultCode == Activity.RESULT_OK) {
+            val listAqiModel = data?.getParcelableArrayListExtra<AQIModel>(Constant.LIST_AQI_MODEL)
+            if (!listAqiModel.isNullOrEmpty()) {
+                viewModel?.getNearestCurrentLocation(listAqiModel[0])
+            }
+        }
+    }
 
     fun openDetaiActivity(aqiData: AQIModel) {
         val intent = Intent(this, DetailActivity::class.java)
@@ -116,111 +141,5 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             Intent(this, SearchActivity::class.java), REQUEST_CODE_ADD
         )
     }
-
-    private fun getLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) !== PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        } else {
-            Log.d(TAG, "getLocation: ${isGPSEnable()}, ${isNetworkEnable()}");
-            if (!isGPSEnable()) {
-                Toast.makeText(this, "Please turn on GPS", Toast.LENGTH_SHORT).show()
-            } else if (!isNetworkEnable()) {
-                Toast.makeText(
-                    this,
-                    "Please turn on mobile data or connect to wifi",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                fusedLocationClient?.getLastLocation()?.addOnSuccessListener(this) { location ->
-                    // Got last known location. In some rare situations this can be null.
-                    Log.d(TAG, "getLocation: $location");
-                    if (location != null) {
-                        currentLocation = location
-                        if (isNetworkEnable()) {
-                            val fullAddress = currentLocation?.getFullAddressFromLatLnt(this)
-                            var aqiModel = AQIModel(1,
-                                currentLocation?.latitude!!,
-                                currentLocation?.longitude!!,
-                                nameAddress = fullAddress?.featureName,
-                                address = fullAddress?.getAddressLine(0),
-                                isCurrentPosition = true
-                            )
-                            viewModel?.getNearestCurrentLocation(aqiModel)
-                        } else {
-                            Toast.makeText(
-                                this,
-                                "Please turn on mobile data or connect to wifi",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        // Logic to handle location object
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        getLocation()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Log.d(TAG, "onActivityResult: $requestCode, $resultCode")
-        if (requestCode == REQUEST_CODE_ADD && resultCode == Activity.RESULT_OK) {
-            val listAqiModel = data?.getParcelableArrayListExtra<AQIModel>(Constant.LIST_AQI_MODEL)
-            Log.d(TAG, "onActivityResult: $listAqiModel");
-            viewModel?.updateList(listAqiModel!!)
-//            val newLocation = data?.getParcelableExtra<Location>(Constant.LOCATION)
-//            newLocation?.let {
-//                val fullAddress =
-//                    getFullAddressFromLatLnt(newLocation?.latitude!!, newLocation?.longitude!!)
-//                var aqiModel = AQIModel(
-//                    newLocation?.latitude!!,
-//                    newLocation?.longitude!!,
-//                    nameAddress = fullAddress?.featureName,
-//                    address = fullAddress?.getAddressLine(0),
-//                    isCurrentPosition = false
-//                )
-//                viewModel?.getNearestCurrentLocation(aqiModel)
-//            }
-
-        } else if(requestCode == REQUEST_CODE_MAP && resultCode == Activity.RESULT_OK) {
-            val listAqiModel = data?.getParcelableArrayListExtra<AQIModel>(Constant.LIST_AQI_MODEL)
-            Log.d(TAG, "onActivityResult: $listAqiModel[0]");
-            if (!listAqiModel.isNullOrEmpty()) {
-                viewModel?.getNearestCurrentLocation(listAqiModel[0])
-            }
-        }
-    }
-
-    fun isNetworkEnable(): Boolean {
-        val connectivityManager =
-            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivityManager != null) {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val networkCapabilities =
-                    connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork);
-                if (networkCapabilities != null) {
-                    return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
-                }
-            }
-        }
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
-    }
-
-    fun isGPSEnable(): Boolean {
-        val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    }
-
 }
 

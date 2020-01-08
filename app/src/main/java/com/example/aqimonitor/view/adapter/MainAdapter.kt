@@ -28,23 +28,21 @@ class MainAdapter(context: Context, data: List<AQIModel>? = ArrayList()) :
         return R.layout.item_aqi_monitor
     }
 
-
-
     override fun onBindViewHolder(
         holder: BaseViewHolder<AQIModel, ItemAqiMonitorBinding>,
         position: Int
     ) {
         super.onBindViewHolder(holder, position)
         Log.d("MainAdapter", ": ${data[position].aqiIndex}, ${data[position].address}, ${context.getNameOfAqiLevel(data.get(position).aqiIndex!!)}");
-        binding?.root?.setBorderBackground(context, context.getColorFromAqiIndex(data.get(position).aqiIndex!!))
-        binding?.ivAqiLevel?.setFaceFromAqiIndex(data.get(position).aqiIndex!!)
-        binding?.backgroundAqiIndex?.setGradientColor(context.getColorFromAqiIndex(data.get(position).aqiIndex!!))
-        Log.d("MainAdapter", ": " + binding?.tvNameAqiLevel);
-        binding?.tvNameAqiLevel?.setText(context.getNameOfAqiLevel(data.get(position).aqiIndex!!))
+        holder.binding?.root?.setBorderBackground(context, context.getColorFromAqiIndex(data.get(position).aqiIndex!!))
+        holder.binding?.ivAqiLevel?.setFaceFromAqiIndex(data.get(position).aqiIndex!!)
+        holder.binding?.backgroundAqiIndex?.setGradientColor(context.getColorFromAqiIndex(data.get(position).aqiIndex!!))
+        Log.d("MainAdapter", ": " + if(holder.binding?.tvNameAqiLevel != null) "Not null" else "null")
+        holder.binding?.tvNameAqiLevel?.setText(context.getNameOfAqiLevel(data.get(position).aqiIndex!!))
         if (data[position].isCurrentPosition) {
-            binding?.containerFollowButton?.visibility = View.GONE
+            holder.binding?.containerFollowButton?.visibility = View.GONE
         }else {
-            binding?.containerFollowButton?.visibility = View.VISIBLE
+            holder.binding?.containerFollowButton?.visibility = View.VISIBLE
         }
 
         val onClickListener = View.OnClickListener {v: View ->
@@ -53,7 +51,7 @@ class MainAdapter(context: Context, data: List<AQIModel>? = ArrayList()) :
                 R.id.tv_unfollow -> onFollowChange!!(position, false)
             }
         }
-        binding?.tvFollow?.setOnClickListener(onClickListener)
-        binding?.tvUnfollow?.setOnClickListener(onClickListener)
+        holder.binding?.tvFollow?.setOnClickListener(onClickListener)
+        holder.binding?.tvUnfollow?.setOnClickListener(onClickListener)
     }
 }

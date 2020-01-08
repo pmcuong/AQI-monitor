@@ -57,4 +57,5 @@ dependencies {
     implementation 'pub.devrel:easypermissions:1.1.1'
     implementation "android.arch.persistence.room:runtime:2.2.3"
     kapt "android.arch.persistence.room:compiler:2.2.3"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 }

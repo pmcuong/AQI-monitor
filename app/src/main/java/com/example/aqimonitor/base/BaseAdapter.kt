@@ -25,7 +25,7 @@ abstract class BaseAdapter<T, VB : ViewDataBinding>(
 
     abstract fun getLayoutId(): Int
 
-    class BaseViewHolder<T, VB : ViewDataBinding>(private val binding: VB) :
+    class BaseViewHolder<T, VB : ViewDataBinding>(val binding: VB) :
         RecyclerView.ViewHolder(binding.root) {
         fun setVariable(id: Int, t: T) {
             binding.setVariable(id, t)
