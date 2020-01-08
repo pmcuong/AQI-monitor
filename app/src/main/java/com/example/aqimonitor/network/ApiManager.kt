@@ -1,5 +1,8 @@
 package com.example.aqimonitor.network
 
+import android.util.Log
+import com.example.aqimonitor.database.AqiRepository
+import com.example.aqimonitor.model.AQIModel
 import com.example.aqimonitor.model.air_quality.SearchResult
 import com.example.aqimonitor.model.search.SearchGlobalObject
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,14 +25,30 @@ class ApiManager {
         }
     }
 
-    fun fetchCityByName(name: String, callback: ResultCallback) {
+    fun fetchCityByName(name: String, callback: ResultCallback, repository: AqiRepository) {
         disposable.add(
             apiService
                 .fetchCityID(city = name.trim())
+                .map {response ->
+                    val list: ArrayList<AQIModel> = ArrayList()
+                    for (item in response.data!!) {
+                        val lat = item.station?.geo?.get(0)
+                        val long = item.station?.geo?.get(1)
+                        val nameAddress = item.station?.name
+                        val address = item.station?.name
+                        val aqiIndex = item.getAqiInFloat()
+                        val uid = item.uid
+                        Log.d("ApiManager", "onSuccess: " + uid + ", " + repository.getItemById(uid!!));
+                        val isFollow = repository.getItemById(uid!!) != null
+
+                        list.add(AQIModel(uid, lat, long, nameAddress, address, aqiIndex, false, isFollow ))
+                    }
+                    return@map list
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<SearchGlobalObject>() {
-                    override fun onSuccess(result: SearchGlobalObject) {
+                .subscribeWith(object : DisposableSingleObserver<ArrayList<AQIModel>>() {
+                    override fun onSuccess(result: ArrayList<AQIModel>) {
                         callback.onSuccess(result)
                     }
 

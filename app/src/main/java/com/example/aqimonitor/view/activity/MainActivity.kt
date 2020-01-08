@@ -29,12 +29,15 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 
-const val REQUEST_CODE = 1030
+const val REQUEST_CODE_ADD = 1030
+const val REQUEST_CODE_MAP = 1031
+
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     val TAG = "MainActivity"
     var currentLocation: Location? = null
     private var fusedLocationClient: FusedLocationProviderClient? = null
+    var listAqiModel: List<AQIModel>? = null
     override fun onClick(v: View) {
         when (v?.id) {
             R.id.tv_add -> openSearchActivity()
@@ -60,6 +63,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
 
         viewModel?.listData?.observe(this, Observer { listData ->
+            for (item in listData) {
+                Log.d(TAG, "getAllData-id: ${item.id}, ${item.isFollow}, " );
+            }
+            listAqiModel = listData
             adapter.setListData(listData)
         })
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -80,7 +87,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             openDetaiActivity(content)
 //            viewModel?.searchCity("halong")
         }
+
+        adapter.onFollowChange = {position, isFollowing ->
+            viewModel?.removeItem(listAqiModel!![position])
+        }
     }
+
+
 
     fun openDetaiActivity(aqiData: AQIModel) {
         val intent = Intent(this, DetailActivity::class.java)
@@ -94,13 +107,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             Intent(this, MapActivity::class.java).putExtra(
                 Constant.LOCATION,
                 currentLocation
-            ), REQUEST_CODE
+            ), REQUEST_CODE_MAP
         )
     }
 
     fun openSearchActivity() {
         startActivityForResult(
-            Intent(this, SearchActivity::class.java), REQUEST_CODE
+            Intent(this, SearchActivity::class.java), REQUEST_CODE_ADD
         )
     }
 
@@ -129,7 +142,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                         currentLocation = location
                         if (isNetworkEnable()) {
                             val fullAddress = currentLocation?.getFullAddressFromLatLnt(this)
-                            var aqiModel = AQIModel(
+                            var aqiModel = AQIModel(1,
                                 currentLocation?.latitude!!,
                                 currentLocation?.longitude!!,
                                 nameAddress = fullAddress?.featureName,
@@ -158,7 +171,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        Log.d(TAG, "onActivityResult: $requestCode, $resultCode")
+        if (requestCode == REQUEST_CODE_ADD && resultCode == Activity.RESULT_OK) {
             val listAqiModel = data?.getParcelableArrayListExtra<AQIModel>(Constant.LIST_AQI_MODEL)
             Log.d(TAG, "onActivityResult: $listAqiModel");
             viewModel?.updateList(listAqiModel!!)
@@ -176,6 +190,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 //                viewModel?.getNearestCurrentLocation(aqiModel)
 //            }
 
+        } else if(requestCode == REQUEST_CODE_MAP && resultCode == Activity.RESULT_OK) {
+            val listAqiModel = data?.getParcelableArrayListExtra<AQIModel>(Constant.LIST_AQI_MODEL)
+            Log.d(TAG, "onActivityResult: $listAqiModel[0]");
+            if (!listAqiModel.isNullOrEmpty()) {
+                viewModel?.getNearestCurrentLocation(listAqiModel[0])
+            }
         }
     }
 

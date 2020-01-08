@@ -2,14 +2,24 @@ package com.example.aqimonitor.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.example.aqimonitor.utils.Constant
 
-class AQIModel(var latitude: Double?, var longitude: Double?,
-               var nameAddress: String? = null,
-               var address: String? = null,
-               var aqiIndex: Float? = 0f,
-               var isCurrentPosition:Boolean = false,
-               var isFollow:Boolean = false) : Parcelable {
+@Entity(tableName = Constant.AQI_DATABASE)
+class AQIModel(
+    @PrimaryKey(autoGenerate = true) var id: Int,
+    @ColumnInfo var latitude: Double?,
+    @ColumnInfo var longitude: Double?,
+    @ColumnInfo var nameAddress: String? = null,
+    @ColumnInfo var address: String? = null,
+    @ColumnInfo var aqiIndex: Float? = 0f,
+    @ColumnInfo var isCurrentPosition: Boolean = false,
+    @ColumnInfo var isFollow: Boolean = false
+) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readInt(),
         parcel.readValue(Double::class.java.classLoader) as? Double,
         parcel.readValue(Double::class.java.classLoader) as? Double,
         parcel.readString(),
@@ -21,6 +31,7 @@ class AQIModel(var latitude: Double?, var longitude: Double?,
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
         parcel.writeValue(latitude)
         parcel.writeValue(longitude)
         parcel.writeString(nameAddress)
@@ -43,5 +54,6 @@ class AQIModel(var latitude: Double?, var longitude: Double?,
             return arrayOfNulls(size)
         }
     }
+
 }
 

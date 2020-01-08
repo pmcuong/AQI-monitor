@@ -1,17 +1,36 @@
 package com.example.aqimonitor.view.viewmodel
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.aqimonitor.database.AqiRepository
 import com.example.aqimonitor.model.AQIModel
 import com.example.aqimonitor.model.search.SearchGlobalObject
 import com.example.aqimonitor.network.ApiManager
 import com.example.aqimonitor.network.ResultCallback
 
-class SearchViewModel: ViewModel() {
-    private val list: ArrayList<AQIModel> = ArrayList()
+class SearchViewModel(application: Application): AndroidViewModel(application) {
+    private var list: ArrayList<AQIModel> = ArrayList()
 
-    val listData: MutableLiveData<List<AQIModel>> = MutableLiveData()
+    private val repository = AqiRepository(application)
+
+    val listDataSearch: MutableLiveData<List<AQIModel>> = MutableLiveData()
+    val listData: LiveData<List<AQIModel>> = repository.getAllData()
+
+    fun addItem(aqiModel: AQIModel) {
+        repository.insertAqiModel(aqiModel)
+    }
+
+    fun removeItem(aqiModel: AQIModel) {
+        repository.deleteAqiModel(aqiModel)
+    }
+
+    fun getItemBytId(id: Int): AQIModel{
+        return repository.getItemById(id)
+    }
 
     fun searchCity(city: String) {
         ApiManager.instance.fetchCityByName(city, object : ResultCallback {
@@ -20,28 +39,18 @@ class SearchViewModel: ViewModel() {
             }
 
             override fun onSuccess(response: Any) {
-                Log.d("SearchViewModel", "onSuccess: $response");
-                response as SearchGlobalObject
-                Log.d("SearchViewModel", "response: ${response.data}");
-                response.data?.let {
-                    list.clear()
-                    for (item in response.data!!) {
-                        val lat = item.station?.geo?.get(0)
-                        val long = item.station?.geo?.get(1)
-                        val nameAddress = item.station?.name
-                        val address = item.station?.name
-                        val aqiIndex = item.getAqiInFloat()
-                        list.add(AQIModel(lat, long, nameAddress, address, aqiIndex, false ))
-                    }
-                    listData.postValue(list)
+                response as ArrayList<AQIModel>
+                response?.let {
+                    list = response
+                    listDataSearch.postValue(list)
                 }
             }
-        })
+        }, repository)
     }
 
     fun setFollowItem(position: Int, isFollow: Boolean) {
         list[position].isFollow = isFollow
-        listData.postValue(list)
+        listDataSearch.postValue(list)
     }
 
     fun getFollowedList(): ArrayList<AQIModel> {

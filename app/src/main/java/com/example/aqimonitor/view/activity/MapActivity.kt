@@ -57,6 +57,7 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(), OnMapReady
     }
 
     override fun onMapReady(p0: GoogleMap?) {
+        newLocation = currentLocation
         val marker = p0?.addMarker(
             MarkerOptions()
                 .position(LatLng(currentLocation?.latitude!!, currentLocation?.longitude!!))
@@ -105,20 +106,23 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(), OnMapReady
     }
 
     fun addNewObserveLocation(location: Location?) {
-        Log.d(TAG, ": " + location + "\n" + newLocation);
-        val fullAddress = newLocation?.getFullAddressFromLatLnt(this)
-        var aqiModel = AQIModel(
-            newLocation?.latitude!!,
-            newLocation?.longitude!!,
-            nameAddress = fullAddress?.featureName,
-            address = fullAddress?.getAddressLine(0),
-            isCurrentPosition = true
-        )
-        val resultIntent = Intent()
-        val data : ArrayList<AQIModel> = ArrayList()
-        data.add(aqiModel)
-        resultIntent.putExtra(Constant.LIST_AQI_MODEL, data)
-        setResult(Activity.RESULT_OK, resultIntent)
-        finish()
+        Log.d(TAG, ": $currentLocation, $location, " + (currentLocation === location));
+        if (currentLocation != location) {
+            val fullAddress = location?.getFullAddressFromLatLnt(this)
+            var aqiModel = AQIModel(0,
+                location?.latitude!!,
+                location?.longitude!!,
+                nameAddress = fullAddress?.featureName,
+                address = fullAddress?.getAddressLine(0),
+                isCurrentPosition = false,
+                isFollow = true
+            )
+            val resultIntent = Intent()
+            val data : ArrayList<AQIModel> = ArrayList()
+            data.add(aqiModel)
+            resultIntent.putExtra(Constant.LIST_AQI_MODEL, data)
+            setResult(Activity.RESULT_OK, resultIntent)
+            finish()
+        }
     }
 }

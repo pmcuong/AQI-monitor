@@ -2,8 +2,10 @@ package com.example.aqimonitor.view.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import com.example.aqimonitor.R
 import com.example.aqimonitor.base.BaseActivity
 import com.example.aqimonitor.databinding.ActivitySearchBinding
@@ -17,6 +19,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 const val TAG = "SearchActivity"
 class SearchActivity: BaseActivity<ActivitySearchBinding, SearchViewModel>(){
     var autocompleteFragment: AutocompleteSupportFragment? = null
+    var listAqi: List<AQIModel>? = null
     var adapter: MainAdapter = MainAdapter(this)
     override fun getLayoutId(): Int {
         return R.layout.activity_search
@@ -64,10 +67,28 @@ class SearchActivity: BaseActivity<ActivitySearchBinding, SearchViewModel>(){
         binding?.recyclerView?.adapter = adapter
         adapter.onFollowChange = {position, isFollowing ->
             viewModel?.setFollowItem(position, isFollowing)
+            listAqi?.let {
+                if (listAqi?.size!! > position) {
+                    if (isFollowing) {
+                        viewModel?.addItem(listAqi!![position])
+                    }else {
+                        viewModel?.removeItem(listAqi!![position])
+                    }
+                }
+            }
         }
 
+        viewModel?.listData?.observe(this, Observer { listData ->
+            for (item in listData) {
+                Log.d(TAG, "getAllData-id: ${item.id}, ${item.isFollow}, " );
+            }
+        })
 
-        viewModel?.listData?.observe(this, androidx.lifecycle.Observer { list: List<AQIModel> ->
+        viewModel?.listDataSearch?.observe(this, androidx.lifecycle.Observer { list: List<AQIModel> ->
+            listAqi = list
+            for (item in list) {
+                Log.d(TAG, "getAllData-id: ${item.id}, ${item.isFollow}, " );
+            }
             adapter.setListData(list)
         })
     }
@@ -102,9 +123,9 @@ class SearchActivity: BaseActivity<ActivitySearchBinding, SearchViewModel>(){
     }
 
     fun sendResult() {
-        val resultIntent = Intent()
-        resultIntent.putExtra(Constant.LIST_AQI_MODEL, viewModel?.getFollowedList())
-        setResult(Activity.RESULT_OK, resultIntent)
+//        val resultIntent = Intent()
+//        resultIntent.putExtra(Constant.LIST_AQI_MODEL, viewModel?.getFollowedList())
+//        setResult(Activity.RESULT_OK, resultIntent)
         finish()
     }
 }

@@ -6,5 +6,6 @@ class Constant {
         const val BASE_URL = "http://api.waqi.info/"
         const val LOCATION = "location"
         const val LIST_AQI_MODEL = "list_aqi_model"
+        const val AQI_DATABASE = "aqi_monitor_database"
     }
 }
