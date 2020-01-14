@@ -1,21 +1,13 @@
 package com.example.aqimonitor.view.activity
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.aqimonitor.R
 import com.example.aqimonitor.base.BaseActivity
 import com.example.aqimonitor.databinding.ActivityMainBinding
@@ -38,6 +30,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     var currentLocation: Location? = null
     private var fusedLocationClient: FusedLocationProviderClient? = null
     var listAqiModel: List<AQIModel>? = null
+    var isLoading = false
 
     override fun onClick(v: View) {
         when (v?.id) {
@@ -61,16 +54,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding?.main = this
         setStatusBarGradient()
         binding?.recyclerView?.adapter = adapter
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-
-        viewModel?.listData?.observe(this, Observer { listData ->
-            for (item in listData) {
-                Log.d(TAG, "getAllData-id: ${item.id}, ${item.isFollow}, ");
-            }
+        viewModel?.getAllData()?.observe(this, Observer { listData ->
+            isLoading = false
+            binding?.swipeRefreshLayout?.isRefreshing = isLoading
             listAqiModel = listData
             adapter.setListData(listData)
         })
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         adapter.onItemClick = { position, content ->
             openDetaiActivity(content)
@@ -79,6 +70,20 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         adapter.onFollowChange = { position, isFollowing ->
             viewModel?.removeItem(listAqiModel!![position])
         }
+
+        binding?.swipeRefreshLayout?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            isLoading = true
+            binding?.swipeRefreshLayout?.isRefreshing = isLoading
+//            viewModel?.getAllDataAqiModel(listAqiModel!! as ArrayList<AQIModel>)
+            viewModel?.updateAllData()
+        })
+
+        // check network if phone has internet connection
+        // request api to update lastest aqi
+        // else show list aqi from database
+
+        getLocation()
+        viewModel?.updateAllData()
     }
 
     private fun getLocation() {
@@ -95,24 +100,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     address = fullAddress?.getAddressLine(0),
                     isCurrentPosition = true
                 )
+                viewModel?.addItem(aqiModel)
                 viewModel?.getNearestCurrentLocation(aqiModel)
-
             }
 
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        getLocation()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_ADD && resultCode == Activity.RESULT_OK) {
-            val listAqiModel = data?.getParcelableArrayListExtra<AQIModel>(Constant.LIST_AQI_MODEL)
-            viewModel?.updateList(listAqiModel!!)
-        } else if (requestCode == REQUEST_CODE_MAP && resultCode == Activity.RESULT_OK) {
+       if (requestCode == REQUEST_CODE_MAP && resultCode == Activity.RESULT_OK) {
             val listAqiModel = data?.getParcelableArrayListExtra<AQIModel>(Constant.LIST_AQI_MODEL)
             if (!listAqiModel.isNullOrEmpty()) {
                 viewModel?.getNearestCurrentLocation(listAqiModel[0])
@@ -128,12 +125,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     fun openMapActivity() {
         Toast.makeText(this, "Go to map", Toast.LENGTH_SHORT).show()
-        startActivityForResult(
-            Intent(this, MapActivity::class.java).putExtra(
-                Constant.LOCATION,
-                currentLocation
-            ), REQUEST_CODE_MAP
-        )
+        startActivity(Intent(this, MapActivity::class.java))
     }
 
     fun openSearchActivity() {

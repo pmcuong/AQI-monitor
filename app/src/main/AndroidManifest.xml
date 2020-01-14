@@ -35,7 +35,9 @@
             android:screenOrientation="portrait"/>
 
         <activity android:name=".view.activity.SearchActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

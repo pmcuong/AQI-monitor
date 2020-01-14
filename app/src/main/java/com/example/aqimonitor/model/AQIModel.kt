@@ -17,7 +17,7 @@ class AQIModel(
     @ColumnInfo var aqiIndex: Float? = 0f,
     @ColumnInfo var isCurrentPosition: Boolean = false,
     @ColumnInfo var isFollow: Boolean = false
-) : Parcelable {
+) : Any(), Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readValue(Double::class.java.classLoader) as? Double,
@@ -27,8 +27,7 @@ class AQIModel(
         parcel.readValue(Float::class.java.classLoader) as? Float,
         parcel.readByte() != 0.toByte(),
         parcel.readByte() != 0.toByte()
-    ) {
-    }
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
@@ -54,6 +53,5 @@ class AQIModel(
             return arrayOfNulls(size)
         }
     }
-
 }
 

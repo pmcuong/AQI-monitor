@@ -5,47 +5,51 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.aqimonitor.database.AqiRepository
+import com.example.aqimonitor.base.BaseViewModel
+import com.example.aqimonitor.data.database.AppDBHelper
 import com.example.aqimonitor.model.AQIModel
-import com.example.aqimonitor.model.search.SearchGlobalObject
-import com.example.aqimonitor.network.ApiManager
-import com.example.aqimonitor.network.ResultCallback
+import com.example.aqimonitor.data.network.AppApiHelper
+import com.example.aqimonitor.data.network.ResultCallback
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 
-class SearchViewModel(application: Application): AndroidViewModel(application) {
+class SearchViewModel(application: Application): BaseViewModel(application) {
     private var list: ArrayList<AQIModel> = ArrayList()
 
-    private val repository = AqiRepository(application)
-
     val listDataSearch: MutableLiveData<List<AQIModel>> = MutableLiveData()
-    val listData: LiveData<List<AQIModel>> = repository.getAllData()
+    val listData = MutableLiveData<List<AQIModel>>()
 
     fun addItem(aqiModel: AQIModel) {
-        repository.insertAqiModel(aqiModel)
+        disposable?.add(appDataManager.insertAqiModel(aqiModel)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+
+            }))
     }
 
     fun removeItem(aqiModel: AQIModel) {
-        repository.deleteAqiModel(aqiModel)
-    }
+        disposable?.add(appDataManager.deleteAqiModel(aqiModel)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
 
-    fun getItemBytId(id: Int): AQIModel{
-        return repository.getItemById(id)
+            }))
     }
 
     fun searchCity(city: String) {
-        ApiManager.instance.fetchCityByName(city, object : ResultCallback {
-            override fun onError(errCode: String) {
-                Log.d("SearchViewModel", "onError: $errCode");
-            }
-
-            override fun onSuccess(response: Any) {
-                response as ArrayList<AQIModel>
-                response?.let {
-                    list = response
-                    listDataSearch.postValue(list)
-                }
-            }
-        }, repository)
+        disposable?.add(appDataManager.fetchListAqiFromCity(city)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Log.d("SearchViewmodel", ": " + it);
+                list.clear()
+                list.addAll(it)
+                listDataSearch.postValue(list)
+            },  {
+                Log.d("SearchViewmodel", ": " + it);
+            }))
     }
 
     fun setFollowItem(position: Int, isFollow: Boolean) {
