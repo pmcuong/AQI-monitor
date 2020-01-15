@@ -15,4 +15,22 @@ data class CityInfo(
     @Expose
     var geo: ArrayList<Float>
 
-)
+) {
+    fun getFullAddress(): String {
+        var fullAddress: String
+        if (name.contains("(") && name.contains(")")) {
+            fullAddress = name?.substring(name.lastIndexOf("(") + 1, name.lastIndexOf(")"))
+        } else {
+            fullAddress = name
+        }
+        return fullAddress.trim()
+    }
+
+    fun getNameAddress(): String {
+        var nameAdress: String
+        var fullAddress = getFullAddress()
+        var arrString: List<String> = fullAddress.split(",")
+        nameAdress = arrString[0]
+        return nameAdress.trim()
+    }
+}

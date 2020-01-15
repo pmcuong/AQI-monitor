@@ -23,7 +23,8 @@ class MapViewModel(application: Application) : BaseViewModel(application) {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 getAqiFromList(it as ArrayList<AQIModel>)
-            }))
+
+            }, {}))
     }
 
     fun getAqiFromList(listAqiModel: ArrayList<AQIModel>) {
@@ -51,7 +52,7 @@ class MapViewModel(application: Application) : BaseViewModel(application) {
                 var list = ArrayList<AQIModel>()
                 list.addAll(it)
                 data.postValue(list)
-            }))
+            }, {}))
     }
 
     fun
@@ -70,7 +71,7 @@ class MapViewModel(application: Application) : BaseViewModel(application) {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 data.postValue(it as ArrayList<AQIModel>)
-        }))
+        }, {}))
     }
 
     fun getNearestCurrentLocation(aqiModel: AQIModel) {

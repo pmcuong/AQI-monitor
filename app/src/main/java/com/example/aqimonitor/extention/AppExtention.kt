@@ -23,8 +23,7 @@ import com.example.aqimonitor.R
 import com.example.aqimonitor.model.AQIModel
 import java.io.IOException
 import java.util.*
-
-
+import android.view.inputmethod.InputMethodManager
 
 
 fun Context.showToast(content: String) {
@@ -158,4 +157,9 @@ fun Activity.isNetworkEnable(): Boolean {
 fun Activity.isGPSEnable(): Boolean {
     val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
     return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+}
+
+fun View.hideKeyboardFrom(context: Context) {
+    val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm!!.hideSoftInputFromWindow(windowToken, 0)
 }

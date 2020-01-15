@@ -67,26 +67,32 @@
             <TextView
                 android:id="@+id/tv_name_address"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:gravity="center_vertical"
                 android:text="@{aqiModel.nameAddress}"
                 android:textColor="@android:color/black"
-                android:textSize="32dp"
-                app:layout_constraintRight_toRightOf="parent"
+                android:textSize="25sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_aqi_level"
-                app:layout_constraintTop_toTopOf="@id/iv_aqi_level" />
+                app:layout_constraintTop_toTopOf="@id/iv_aqi_level"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/tv_address"
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:gravity="center_vertical"
                 android:text="@{aqiModel.address}"
                 android:textColor="@android:color/black"
-                android:textSize="22dp"
+                android:textSize="14sp"
+                android:layout_marginRight="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_name_address"
-                app:layout_constraintTop_toBottomOf="@id/tv_name_address" />
+                app:layout_constraintTop_toBottomOf="@id/tv_name_address"
+                android:ellipsize="end"
+                android:maxLines="2"/>
 
             <View
                 android:id="@+id/background_aqi_index"

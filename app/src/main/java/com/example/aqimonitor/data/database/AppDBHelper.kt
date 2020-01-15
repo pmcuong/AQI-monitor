@@ -9,11 +9,7 @@ import com.example.aqimonitor.data.database.dao.AqiModelDao
 import com.example.aqimonitor.data.network.AppApiHelper
 import com.example.aqimonitor.model.AQIModel
 import com.example.aqimonitor.utils.Constant
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.ObservableOnSubscribe
+import io.reactivex.*
 import java.util.concurrent.Callable
 
 class AppDBHelper(application: Application) : DBHelper {
@@ -35,7 +31,7 @@ class AppDBHelper(application: Application) : DBHelper {
     }
 
     override fun insertListAqiModel(list: List<AQIModel>): Completable {
-        Log.d("AppDBHelper", ": ${list.size}");
+        Log.d("AppDBHelper", "insertListAqiModel: ${list.size}");
         return aqiModelDao!!.insertListItem(list)
     }
 
@@ -43,7 +39,8 @@ class AppDBHelper(application: Application) : DBHelper {
         return aqiModelDao!!.deleteItem(aqiModel)
     }
 
-    override fun getAllData(): Observable<List<AQIModel>> {
+    override fun getAllData(): Single<List<AQIModel>> {
+        Log.d("AppDBHelper", "getAllData");
         return aqiModelDao!!.getAllItems()
     }
 

@@ -25,5 +25,5 @@ interface AqiModelDao {
     fun getItemById(id: Int): AQIModel?
 
     @Query("SELECT * FROM AQI_MONITOR_DATABASE")
-    fun getAllItems():  Observable<List<AQIModel>>
+    fun getAllItems():  Single<List<AQIModel>>
 }

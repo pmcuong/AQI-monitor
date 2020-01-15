@@ -52,7 +52,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     @SuppressLint("MissingPermission")
     override fun initView() {
         binding?.main = this
-        setStatusBarGradient()
         binding?.recyclerView?.adapter = adapter
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -74,7 +73,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding?.swipeRefreshLayout?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
             isLoading = true
             binding?.swipeRefreshLayout?.isRefreshing = isLoading
-//            viewModel?.getAllDataAqiModel(listAqiModel!! as ArrayList<AQIModel>)
             viewModel?.updateAllData()
         })
 
@@ -83,6 +81,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         // else show list aqi from database
 
         getLocation()
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel?.updateAllData()
     }
 
@@ -100,7 +102,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     address = fullAddress?.getAddressLine(0),
                     isCurrentPosition = true
                 )
-                viewModel?.addItem(aqiModel)
+//                viewModel?.addItem(aqiModel)
                 viewModel?.getNearestCurrentLocation(aqiModel)
             }
 

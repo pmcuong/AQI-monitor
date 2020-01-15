@@ -4,6 +4,7 @@ import com.example.aqimonitor.model.AQIModel
 
 import io.reactivex.Observable
 import io.reactivex.Completable
+import io.reactivex.Single
 
 interface DBHelper {
 
@@ -13,7 +14,7 @@ interface DBHelper {
 
     fun deleteAqiModel(aqiModel: AQIModel): Completable
 
-    fun getAllData(): Observable<List<AQIModel>>
+    fun getAllData(): Single<List<AQIModel>>
 
     fun getItemById(id: Int):  Observable<AQIModel?>
 }

@@ -18,7 +18,6 @@ class SearchViewModel(application: Application): BaseViewModel(application) {
     private var list: ArrayList<AQIModel> = ArrayList()
 
     val listDataSearch: MutableLiveData<List<AQIModel>> = MutableLiveData()
-    val listData = MutableLiveData<List<AQIModel>>()
 
     fun addItem(aqiModel: AQIModel) {
         disposable?.add(appDataManager.insertAqiModel(aqiModel)
@@ -43,12 +42,10 @@ class SearchViewModel(application: Application): BaseViewModel(application) {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d("SearchViewmodel", ": " + it);
                 list.clear()
                 list.addAll(it)
-                listDataSearch.postValue(list)
+                getAqiFromList(list)
             },  {
-                Log.d("SearchViewmodel", ": " + it);
             }))
     }
 
@@ -57,13 +54,18 @@ class SearchViewModel(application: Application): BaseViewModel(application) {
         listDataSearch.postValue(list)
     }
 
-    fun getFollowedList(): ArrayList<AQIModel> {
-        val followedList: ArrayList<AQIModel> = ArrayList()
-        for (aqiModel in list) {
-            if (aqiModel.isFollow) {
-                followedList.add(aqiModel)
-            }
-        }
-        return followedList
+    fun getAqiFromList(listAqiModel: ArrayList<AQIModel>) {
+        disposable?.add(appDataManager.fetchAllAqiData(listAqiModel)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                Consumer { result ->
+                    list.clear()
+                    list.addAll(result)
+                    listDataSearch.postValue(list)
+
+                }
+            )
+        )
     }
 }
